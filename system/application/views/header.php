@@ -20,12 +20,6 @@
 	<script type="text/javascript">
 		$(document).ready( function() {
 			
-			// TESTING SCRIPT March 4, 2013===================================================
-			
-			// username is used to take only the firstname of the fullname
-			// if the first name
-			//var name_array = '<?php echo $this->session->userdata('name') ?>'.split(" "); 
-			
 			var get_first_name = function(name) {
 				var x = name.split(" ");
 				return (x[0] == 'dr.' ? x[1]  : x[0]);
