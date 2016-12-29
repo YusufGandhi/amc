@@ -33,46 +33,14 @@
 			
 			var username = get_first_name('<?php echo $this->session->userdata('name') ?>');//(name_array[0] == 'dr.' ? name_array[1]  : name_array[0]);
 			/*
-			 * TO-DO, April 4, 2013
-			 * --------------------
-			 * 'title' option below: should contain the name of the chat mate
-			 * 
-			
+			 * NEW FEATURE-2013: CHAT BOX
 			 */
 			 
 			 // script is taken from http://magma.cs.uiuc.edu/wenpu1/chatbox.html#
 			var last_message_id;
 			$.get("<?php echo site_url('chat/get_last_message_id') ?>", {}, function(data) {
 				last_message_id = data;
-				//alert(last_message_id);
 			});
-			/*var box = $("#chat_div").chatbox({id: username,
-											  user:{key : "value"},
-											  title : "test chat",
-											  messageSent : function(id, user, msg) {
-												//$("#log").append(id + " said: " + msg + "<br/>");												
-												//$("#chat_div").chatbox("option", "boxManager").addMsg(id, msg);
-												
-												$.ajax({
-													url: '<?php echo site_url('chat/save') ?>',
-													type: 'POST',													
-													data: 'message=' + msg + '&sender_id=' + <?php echo $this->session->userdata('id') ?>,
-													success: function(response) {
-																	if (response != "False") {
-																		$("#chat_div").chatbox("option", "boxManager").addMsg(id, msg);
-																		//$("#chat_div").children("div:last").append("<span id='id' style=''>" +response+ "</span>");
-																		last_message_id = response;
-																	}
-															 }
-												});
-											  }
-											});*/
-			// The following line is necessary because the font color for the chat log is white
-			// we change it directly here by accessing through javascript css and change the color to black
-			//$("div#chat_div.ui-widget-content.ui-chatbox-log").css("color","black");
-			
-			
-			
 			
 			var check_message = function() {
 				$.ajax({
@@ -82,7 +50,6 @@
 					dataType: 'json',
 					success: function(response) {
 								if(response.response == 'YES') {
-									//alert(data.message.sender_id);
 									var user_id = response.message.sender_id;
 									var box_id = "box" + user_id;
 									chatboxManager.addBox(box_id,
@@ -91,8 +58,6 @@
 															  user:{key : "value"},																 
 															  title : response.message.sender_name,
 															  messageSent : function(id, user, msg) {
-																//$("#log").append(id + " said: " + msg + "<br/>");												
-																//$("#chat_div").chatbox("option", "boxManager").addMsg(id, msg);
 																
 																$.ajax({
 																	url: '<?php echo site_url('chat/save') ?>',
@@ -101,7 +66,6 @@
 																	success: function(response) {
 																					if (response != "False") {
 																						$("#box"+user_id).chatbox("option", "boxManager").addMsg(username, msg);
-																						//$("#chat_div").children("div:last").append("<span id='id' style=''>" +response+ "</span>");
 																						last_message_id = response;
 																					}
 																			 }
@@ -112,7 +76,6 @@
 									$("div#box"+user_id+".ui-widget-content.ui-chatbox-log").css("color","black");
 									last_message_id = response.message.id;
 								}
-								//alert(data.response);
 							}
 					
 				});
@@ -126,15 +89,10 @@
 						data: 'group_id=' +group_id+ '&last_message_id=' +last_message_id,
 						dataType: 'json',
 						success: function(response) {
-										//alert(response.response);
 										if(response.response == 'YES') {
 											$.each(response.message, function(idx, data) {
 												$("#chat_div").chatbox("option", "boxManager").addMsg(data.sender_id, data.content);
 											});
-											
-											//if(parseInt(response.last_id) < last_message_id)
-												//$("#chat_div").chatbox("option", "boxManager").addMsg(response.message[0].sender_id, response.message[0].content);
-											//alert(response.message[0].content);
 											last_message_id = response.last_id;
 										}
 								 }		
@@ -166,7 +124,6 @@
 										}
 									)
 									.click( function() {
-										//alert($(this).attr('user'));
 										var user_id = $(this).attr('user');
 										var box_id = "box" + user_id;
 										chatboxManager.addBox(box_id,
@@ -175,8 +132,7 @@
 																  user:{key : "value"},																 
 																  title : $(this).html(),
 																  messageSent : function(id, user, msg) {
-																	//$("#log").append(id + " said: " + msg + "<br/>");												
-																	//$("#chat_div").chatbox("option", "boxManager").addMsg(id, msg);
+																	
 																	
 																	$.ajax({
 																		url: '<?php echo site_url('chat/save') ?>',
@@ -185,7 +141,6 @@
 																		success: function(response) {
 																						if (response != "False") {
 																							$("#box"+user_id).chatbox("option", "boxManager").addMsg(username, msg);
-																							//$("#chat_div").children("div:last").append("<span id='id' style=''>" +response+ "</span>");
 																							last_message_id = response;
 																						}
 																				 }
@@ -195,7 +150,6 @@
 										$("div#box"+user_id+".ui-widget-content.ui-chatbox-log").css("color","black");
 									});
 								}
-								//check_online_users();
 							 }
 				});
 				
@@ -204,18 +158,14 @@
 			// this line is for retrieving (refreshing the script every 2 seconds
 			// to check new messages
 			setInterval(function() {
-				//check_new_message('1');
 				check_message();
-				//check_online_users();
-				//alert('hoi');
 			}, 2000);
 			
 			check_online_users();
 			
 			
-			/**/
-			//box.chatbox("option", "boxManager").toggleBox();
-			// END OF TESTING SCRIPT ==========================================================
+			
+			// END OF CHATBOX FEATURE
 		
 		
 		<?php if ($this->session->userdata("station") == '2') : ?>
